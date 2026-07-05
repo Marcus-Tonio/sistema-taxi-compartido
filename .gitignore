@@ -1,0 +1,13 @@
+# Env
+.env
+venv/
+__pycache__/
+*.pyc
+
+# IDEs
+.idea/
+.vscode/
+
+# Node (though frontend has its own .gitignore, good to have it here just in case)
+node_modules/
+dist/
