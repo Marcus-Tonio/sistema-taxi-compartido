@@ -1,99 +1,100 @@
 import React, { useState } from 'react';
+import { FaCreditCard, FaMoneyBillWave, FaPaypal, FaCheckCircle, FaLock } from 'react-icons/fa';
 
 export default function Pago() {
-  const [metodoPago, setMetodoPago] = useState('Tarjeta');
-  const [cupon, setCupon] = useState('');
-  const [descuento, setDescuento] = useState(null);
+  const [metodo, setMetodo] = useState('tarjeta');
+  const [pagado, setPagado] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const aplicarCupon = () => {
-    if (cupon.toUpperCase() === 'PROMO10') {
-      setDescuento(10);
-    } else {
-      setDescuento(0);
-    }
+  const procesarPago = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setPagado(true);
+    }, 1500);
   };
 
-  const subtotal = 2.50;
-  const montoFinal = descuento ? (subtotal * (1 - descuento / 100)).toFixed(2) : subtotal.toFixed(2);
+  if (pagado) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '2rem' }}>
+        <div style={{ background: 'var(--gray-900)', padding: '3rem', borderRadius: '24px', textAlign: 'center', maxWidth: '400px', width: '100%', boxShadow: '0 20px 40px rgba(0,0,0,0.5)', border: '1px solid var(--border)' }}>
+          <FaCheckCircle style={{ fontSize: '4rem', color: '#10b981', marginBottom: '1rem' }} />
+          <h2 style={{ color: 'white', marginBottom: '0.5rem' }}>Pago Exitoso</h2>
+          <p style={{ color: 'var(--gray-400)', marginBottom: '2rem' }}>Tu recibo ha sido enviado a tu correo.</p>
+          <button className="btn btn-full-yellow" onClick={() => setPagado(false)}>Volver al inicio</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="card">
-      <h2 className="card-title">Procesamiento de Pago (RF-8)</h2>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '2rem' }}>
+      <div style={{ background: 'var(--gray-900)', padding: '2.5rem', borderRadius: '24px', maxWidth: '450px', width: '100%', boxShadow: '0 20px 40px rgba(0,0,0,0.5)', border: '1px solid var(--border)' }}>
+        
+        <h2 style={{ color: 'white', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          Checkout <FaLock style={{fontSize: '1rem', color: 'var(--gray-500)'}} />
+        </h2>
+        <p style={{ color: 'var(--gray-400)', fontSize: '0.9rem', marginBottom: '2rem' }}>Completa tu pago de forma segura.</p>
 
-      <div style={{ background: '#F3F4F6', borderRadius: '8px', padding: '1rem', marginBottom: '1.25rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-          <span style={{ color: '#6C757D', fontSize: '0.9rem' }}>Viaje · 4.2 km</span>
-          <span style={{ fontWeight: 600 }}>$2.50</span>
-        </div>
-        {descuento > 0 && (
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-            <span style={{ color: '#059669', fontSize: '0.9rem' }}>Cupón PROMO10 (-{descuento}%)</span>
-            <span style={{ color: '#059669', fontWeight: 600 }}>-$0.25</span>
+        {/* Resumen */}
+        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1.5rem', borderRadius: '16px', marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: 'var(--gray-300)' }}>
+            <span>Viaje de Universidad a Malecón</span>
+            <span>$4.50</span>
           </div>
-        )}
-        <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #E5E7EB', paddingTop: '0.5rem' }}>
-          <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Total</span>
-          <span style={{ fontWeight: 700, fontSize: '1.1rem', color: '#B45309' }}>${montoFinal}</span>
-        </div>
-      </div>
-
-      <div className="form-group">
-        <span className="form-label">Método de pago</span>
-        <div className="radio-group" style={{ flexWrap: 'wrap' }}>
-          {['Tarjeta', 'Efectivo', 'QR Code'].map(m => (
-            <label key={m} className="radio-label">
-              <input type="radio" checked={metodoPago === m} onChange={() => setMetodoPago(m)} />
-              {m}
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {metodoPago === 'Tarjeta' && (
-        <>
-          <div className="form-group">
-            <label className="form-label">Número de tarjeta</label>
-            <input type="text" className="form-control" placeholder="**** **** **** 1234" maxLength={19} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', color: 'var(--gray-300)' }}>
+            <span>Tasa de servicio</span>
+            <span>$0.50</span>
           </div>
-          <div className="form-group" style={{ display: 'flex', gap: '1rem' }}>
-            <div style={{ flex: 1 }}>
-              <label className="form-label">Vencimiento</label>
-              <input type="text" className="form-control" placeholder="MM/AA" />
-            </div>
-            <div style={{ flex: 1 }}>
-              <label className="form-label">CVV</label>
-              <input type="password" className="form-control" placeholder="•••" maxLength={3} />
-            </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border)', paddingTop: '1rem', color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>
+            <span>Total a pagar</span>
+            <span style={{ color: 'var(--yellow-400)' }}>$5.00</span>
           </div>
-        </>
-      )}
+        </div>
 
-      <div className="form-group">
-        <label className="form-label">Cupón de descuento</label>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Ej. PROMO10"
-            value={cupon}
-            onChange={(e) => setCupon(e.target.value)}
-            style={{ flex: 1 }}
-          />
-          <button
-            className="btn btn-secondary"
-            style={{ width: 'auto', padding: '0.75rem 1rem' }}
-            onClick={aplicarCupon}
+        {/* Métodos */}
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+          <button 
+            style={{ flex: 1, padding: '1rem', borderRadius: '12px', background: metodo === 'tarjeta' ? 'rgba(245,158,11,0.1)' : 'rgba(255,255,255,0.05)', border: `1px solid ${metodo === 'tarjeta' ? 'var(--yellow-400)' : 'transparent'}`, color: 'white', cursor: 'pointer', transition: 'all 0.2s' }}
+            onClick={() => setMetodo('tarjeta')}
           >
-            Aplicar
+            <FaCreditCard style={{ fontSize: '1.5rem', color: metodo === 'tarjeta' ? 'var(--yellow-400)' : 'var(--gray-400)', marginBottom: '0.5rem' }} />
+            <div style={{ fontSize: '0.85rem' }}>Tarjeta</div>
+          </button>
+          <button 
+            style={{ flex: 1, padding: '1rem', borderRadius: '12px', background: metodo === 'efectivo' ? 'rgba(245,158,11,0.1)' : 'rgba(255,255,255,0.05)', border: `1px solid ${metodo === 'efectivo' ? 'var(--yellow-400)' : 'transparent'}`, color: 'white', cursor: 'pointer', transition: 'all 0.2s' }}
+            onClick={() => setMetodo('efectivo')}
+          >
+            <FaMoneyBillWave style={{ fontSize: '1.5rem', color: metodo === 'efectivo' ? 'var(--yellow-400)' : 'var(--gray-400)', marginBottom: '0.5rem' }} />
+            <div style={{ fontSize: '0.85rem' }}>Efectivo</div>
+          </button>
+          <button 
+            style={{ flex: 1, padding: '1rem', borderRadius: '12px', background: metodo === 'paypal' ? 'rgba(245,158,11,0.1)' : 'rgba(255,255,255,0.05)', border: `1px solid ${metodo === 'paypal' ? 'var(--yellow-400)' : 'transparent'}`, color: 'white', cursor: 'pointer', transition: 'all 0.2s' }}
+            onClick={() => setMetodo('paypal')}
+          >
+            <FaPaypal style={{ fontSize: '1.5rem', color: metodo === 'paypal' ? 'var(--yellow-400)' : 'var(--gray-400)', marginBottom: '0.5rem' }} />
+            <div style={{ fontSize: '0.85rem' }}>PayPal</div>
           </button>
         </div>
-        {descuento === 0 && <p style={{ color: '#EF4444', fontSize: '0.8rem', marginTop: '0.25rem' }}>Cupón no válido.</p>}
-        {descuento > 0 && <p style={{ color: '#059669', fontSize: '0.8rem', marginTop: '0.25rem' }}>✓ Descuento aplicado correctamente.</p>}
-      </div>
 
-      <div className="button-group">
-        <button className="btn btn-secondary">Cancelar</button>
-        <button className="btn btn-primary">Confirmar Pago · ${montoFinal}</button>
+        {metodo === 'tarjeta' && (
+          <div style={{ marginBottom: '2rem' }}>
+            <div style={{ background: 'rgba(0,0,0,0.3)', padding: '1rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '1rem', border: '1px solid var(--border)' }}>
+              <div style={{ background: '#1e3a8a', padding: '0.3rem 0.6rem', borderRadius: '6px', color: 'white', fontWeight: 'bold', fontSize: '0.8rem', fontStyle: 'italic' }}>VISA</div>
+              <div style={{ color: 'white', flex: 1 }}>•••• •••• •••• 4242</div>
+              <div style={{ color: 'var(--yellow-400)', fontSize: '0.8rem', cursor: 'pointer' }}>Cambiar</div>
+            </div>
+          </div>
+        )}
+
+        <button 
+          className="btn btn-full-yellow" 
+          style={{ padding: '1rem', fontSize: '1.1rem' }} 
+          onClick={procesarPago}
+          disabled={loading}
+        >
+          {loading ? 'Procesando...' : `Pagar $5.00`}
+        </button>
       </div>
     </div>
   );

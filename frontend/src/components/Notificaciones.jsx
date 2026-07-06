@@ -1,94 +1,108 @@
-import React, { useState } from 'react';
-
-const notificacionesMock = [
-  { id: 1, tipo: 'viaje', icono: '🚕', titulo: 'Conductor asignado', mensaje: 'Manuel Pauta llegará en 5 minutos. Placa: GBT-0234', hora: 'Hace 2 min', leida: false },
-  { id: 2, tipo: 'pago', icono: '💳', titulo: 'Pago confirmado', mensaje: 'Se procesó correctamente el pago de $2.25 por tu viaje.', hora: 'Hace 15 min', leida: false },
-  { id: 3, tipo: 'promo', icono: '🎁', titulo: 'Nuevo cupón disponible', mensaje: 'Usa PROMO10 y obtén 10% de descuento en tu próximo viaje.', hora: 'Hace 1 hora', leida: true },
-  { id: 4, tipo: 'sistema', icono: '🔔', titulo: 'Bienvenido al sistema', mensaje: 'Tu cuenta ha sido verificada exitosamente. ¡Buen viaje!', hora: 'Ayer', leida: true },
-];
+import React from 'react';
+import { FaBell, FaCarSide, FaCheckCircle, FaExclamationTriangle, FaTags } from 'react-icons/fa';
 
 export default function Notificaciones() {
-  const [notificaciones, setNotificaciones] = useState(notificacionesMock);
-  const [filtro, setFiltro] = useState('todas');
-
-  const marcarLeidas = () => setNotificaciones(n => n.map(x => ({ ...x, leida: true })));
-
-  const filtradas = filtro === 'todas' ? notificaciones : notificaciones.filter(n => !n.leida);
-  const noLeidas = notificaciones.filter(n => !n.leida).length;
+  const notificaciones = [
+    {
+      id: 1,
+      tipo: 'viaje',
+      titulo: 'Tu conductor ha llegado',
+      mensaje: 'Carlos te está esperando en el punto de encuentro (Universidad de Guayaquil).',
+      tiempo: 'Hace 2 min',
+      leida: false,
+      icono: <FaCarSide />,
+      color: '#3b82f6'
+    },
+    {
+      id: 2,
+      tipo: 'promocion',
+      titulo: '¡15% de descuento hoy!',
+      mensaje: 'Usa el código TAXIEC15 en tu próximo viaje compartido antes de la medianoche.',
+      tiempo: 'Hace 3 horas',
+      leida: true,
+      icono: <FaTags />,
+      color: '#10b981'
+    },
+    {
+      id: 3,
+      tipo: 'alerta',
+      titulo: 'Tráfico inusual en tu ruta',
+      mensaje: 'Hemos recalculado tu ruta debido a congestión en la Av. 9 de Octubre.',
+      tiempo: 'Ayer',
+      leida: true,
+      icono: <FaExclamationTriangle />,
+      color: '#f59e0b'
+    },
+    {
+      id: 4,
+      tipo: 'sistema',
+      titulo: 'Viaje completado con éxito',
+      mensaje: 'Gracias por viajar con nosotros. Tu recibo ha sido enviado a tu correo.',
+      tiempo: 'Ayer',
+      leida: true,
+      icono: <FaCheckCircle />,
+      color: '#8b5cf6'
+    }
+  ];
 
   return (
-    <div className="card" style={{ maxWidth: '560px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.4rem', fontWeight: 700, margin: 0 }}>
-          Notificaciones (RF-10)
-          {noLeidas > 0 && (
-            <span style={{ marginLeft: '0.5rem', background: '#EF4444', color: '#fff', borderRadius: '50%', padding: '1px 7px', fontSize: '0.75rem', verticalAlign: 'middle' }}>
-              {noLeidas}
-            </span>
-          )}
-        </h2>
-        {noLeidas > 0 && (
-          <button onClick={marcarLeidas} style={{ background: 'none', border: 'none', color: '#6C757D', cursor: 'pointer', fontSize: '0.85rem', textDecoration: 'underline' }}>
-            Marcar todo como leído
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', height: '100%', padding: '2rem', overflowY: 'auto' }}>
+      <div style={{ background: 'var(--gray-900)', borderRadius: '24px', maxWidth: '600px', width: '100%', border: '1px solid var(--border)', padding: '2rem' }}>
+        
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+          <h2 style={{ color: 'white', margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <FaBell style={{color: 'var(--yellow-400)'}}/> Notificaciones
+          </h2>
+          <button style={{ background: 'transparent', border: 'none', color: 'var(--yellow-400)', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 'bold' }}>
+            Marcar todas como leídas
           </button>
-        )}
-      </div>
+        </div>
 
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
-        {['todas', 'no leídas'].map(f => (
-          <button
-            key={f}
-            onClick={() => setFiltro(f)}
-            style={{
-              padding: '0.35rem 1rem',
-              borderRadius: '20px',
-              border: '1px solid',
-              borderColor: filtro === f ? '#FFD500' : '#E5E7EB',
-              background: filtro === f ? '#FEF3C7' : 'transparent',
-              fontWeight: filtro === f ? 700 : 400,
-              cursor: 'pointer',
-              fontSize: '0.85rem',
-              textTransform: 'capitalize',
-            }}
-          >
-            {f}
-          </button>
-        ))}
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-        {filtradas.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '2rem', color: '#6C757D' }}>
-            <div style={{ fontSize: '2rem' }}>🎉</div>
-            <p>¡Todo al día! No tienes notificaciones pendientes.</p>
-          </div>
-        )}
-        {filtradas.map(n => (
-          <div
-            key={n.id}
-            onClick={() => setNotificaciones(prev => prev.map(x => x.id === n.id ? { ...x, leida: true } : x))}
-            style={{
-              display: 'flex',
-              gap: '1rem',
-              padding: '0.85rem 1rem',
-              borderRadius: '10px',
-              background: n.leida ? '#F9FAFB' : '#FFFBEB',
-              border: `1px solid ${n.leida ? '#E5E7EB' : '#FDE68A'}`,
-              cursor: 'pointer',
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {notificaciones.map(noti => (
+            <div key={noti.id} style={{ 
+              display: 'flex', 
+              gap: '1.25rem', 
+              background: noti.leida ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.08)', 
+              padding: '1.25rem', 
+              borderRadius: '16px', 
+              borderLeft: `4px solid ${noti.leida ? 'transparent' : noti.color}`,
               transition: 'background 0.2s',
-            }}
-          >
-            <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>{n.icono}</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <p style={{ margin: 0, fontWeight: n.leida ? 500 : 700, fontSize: '0.95rem' }}>{n.titulo}</p>
-                <span style={{ fontSize: '0.75rem', color: '#9CA3AF', whiteSpace: 'nowrap', marginLeft: '0.5rem' }}>{n.hora}</span>
+              cursor: 'pointer'
+            }}>
+              
+              <div style={{ 
+                background: `${noti.color}20`, 
+                color: noti.color, 
+                width: '48px', 
+                height: '48px', 
+                borderRadius: '12px', 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                fontSize: '1.5rem',
+                flexShrink: 0
+              }}>
+                {noti.icono}
               </div>
-              <p style={{ margin: '0.2rem 0 0', fontSize: '0.85rem', color: '#6C757D' }}>{n.mensaje}</p>
+
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.3rem' }}>
+                  <h3 style={{ margin: 0, color: noti.leida ? 'var(--gray-300)' : 'white', fontSize: '1.05rem' }}>{noti.titulo}</h3>
+                  <span style={{ color: 'var(--gray-500)', fontSize: '0.75rem', whiteSpace: 'nowrap', marginLeft: '1rem' }}>{noti.tiempo}</span>
+                </div>
+                <p style={{ margin: 0, color: 'var(--gray-400)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                  {noti.mensaje}
+                </p>
+              </div>
+
+              {!noti.leida && (
+                <div style={{ width: '8px', height: '8px', background: 'var(--yellow-400)', borderRadius: '50%', alignSelf: 'center', flexShrink: 0 }}></div>
+              )}
             </div>
-            {!n.leida && <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FFD500', flexShrink: 0, marginTop: '6px' }} />}
-          </div>
-        ))}
+          ))}
+        </div>
+
       </div>
     </div>
   );
