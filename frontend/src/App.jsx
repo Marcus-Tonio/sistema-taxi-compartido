@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import SolicitudGeolocalizada from './components/SolicitudGeolocalizada';
@@ -19,104 +20,113 @@ import GestionLocalidades from './components/GestionLocalidades';
 import GestionIncidentes from './components/GestionIncidentes';
 import Reportes from './components/Reportes';
 import Configuracion from './components/Configuracion';
+import { FaCarSide, FaSignOutAlt, FaMapMarkedAlt, FaSearchLocation, FaRoute, FaShareAlt, FaUserTie, FaCreditCard, FaStar, FaBell, FaClipboardList, FaUsers, FaMapSigns, FaHistory, FaUsersCog, FaCar, FaMapPin, FaExclamationTriangle, FaChartBar, FaCog } from 'react-icons/fa';
 import './App.css';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('login');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [activeTab, setActiveTab] = useState('rf3');
+  const [showModal, setShowModal] = useState(null); // 'login' | 'register' | null
+  const [userRole, setUserRole] = useState('Pasajero');
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  const handleLogin = (role) => {
+    setUserRole(role);
     setIsAuthenticated(true);
-    setActiveTab('rf3'); // Redirigir a solicitar viaje al entrar
+    setShowModal(null);
+    if (role === 'Pasajero') setActiveTab('rf3');
+    else if (role === 'Conductor') setActiveTab('rf11');
+    else if (role === 'Admin') setActiveTab('rf15');
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    setActiveTab('login');
+    setActiveTab('rf3');
   };
 
+  if (!isAuthenticated) {
+    return (
+      <>
+        <Home onNavigate={setShowModal} />
+        {showModal === 'login' && <Login onLogin={handleLogin} onClose={() => setShowModal(null)} />}
+        {showModal === 'register' && <Register onClose={() => setShowModal(null)} />}
+      </>
+    );
+  }
+
   return (
-    <div className="app-container">
-      <header className="header">
-        <h1>🚕 Taxi Compartido</h1>
-        <div style={{fontWeight: 500, display: 'flex', alignItems: 'center', gap: '1rem'}}>
-          {isAuthenticated ? (
-            <>
-              <span>Modo Pasajero</span>
-              <button className="btn btn-secondary" style={{padding: '0.25rem 0.75rem', fontSize: '0.8rem'}} onClick={handleLogout}>Salir</button>
-            </>
-          ) : (
-            <span>Bienvenido</span>
-          )}
+    <div className="dashboard-layout">
+      {/* Sidebar */}
+      <aside className="sidebar">
+        <div className="sidebar-brand">
+          <div className="sidebar-brand-icon"><FaCarSide /></div>
+          Taxi<span>Ec</span>
         </div>
-      </header>
-      
-      <main className="main-content">
-        <div style={{width: '100%', maxWidth: isAuthenticated ? '900px' : '500px', display: 'flex', gap: '2rem'}}>
-          
-          {isAuthenticated && (
-            <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '220px'}}>
-              <h3 style={{fontSize: '0.9rem', color: '#6C757D', margin: '0 0 0.5rem', textTransform: 'uppercase'}}>Pasajero</h3>
-              <button className={`btn ${activeTab === 'rf3' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf3')}>Solicitar Viaje</button>
-              <button className={`btn ${activeTab === 'rf4' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf4')}>Ver Disponibles</button>
-              <button className={`btn ${activeTab === 'rf5' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf5')}>Ruta y Costo</button>
-              <button className={`btn ${activeTab === 'rf6' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf6')}>Compartir Viaje</button>
-              <button className={`btn ${activeTab === 'rf7' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf7')}>Perfil Conductor</button>
-              <button className={`btn ${activeTab === 'rf8' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf8')}>Pago</button>
-              <button className={`btn ${activeTab === 'rf9' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf9')}>Calificación</button>
-              <button className={`btn ${activeTab === 'rf10' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf10')}>
-                Notificaciones
-              </button>
 
-              <h3 style={{fontSize: '0.9rem', color: '#6C757D', margin: '1rem 0 0.5rem', textTransform: 'uppercase'}}>Conductor</h3>
-              <button className={`btn ${activeTab === 'rf11' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf11')}>Solicitudes</button>
-              <button className={`btn ${activeTab === 'rf12' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf12')}>Capacidad</button>
-              <button className={`btn ${activeTab === 'rf13' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf13')}>Zonas</button>
-              <button className={`btn ${activeTab === 'rf14' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf14')}>Historial</button>
+        {userRole === 'Pasajero' && (
+          <>
+            <div className="sidebar-section-label">Modo Pasajero</div>
+            <button className={`sidebar-btn ${activeTab === 'rf3' ? 'active' : ''}`} onClick={() => setActiveTab('rf3')}><div className="sidebar-btn-icon"><FaMapMarkedAlt/></div> Solicitar Viaje</button>
+            <button className={`sidebar-btn ${activeTab === 'rf4' ? 'active' : ''}`} onClick={() => setActiveTab('rf4')}><div className="sidebar-btn-icon"><FaSearchLocation/></div> Ver Disponibles</button>
+            <button className={`sidebar-btn ${activeTab === 'rf5' ? 'active' : ''}`} onClick={() => setActiveTab('rf5')}><div className="sidebar-btn-icon"><FaRoute/></div> Ruta y Costo</button>
+            <button className={`sidebar-btn ${activeTab === 'rf6' ? 'active' : ''}`} onClick={() => setActiveTab('rf6')}><div className="sidebar-btn-icon"><FaShareAlt/></div> Compartir Viaje</button>
+            <button className={`sidebar-btn ${activeTab === 'rf7' ? 'active' : ''}`} onClick={() => setActiveTab('rf7')}><div className="sidebar-btn-icon"><FaUserTie/></div> Perfil Conductor</button>
+            <button className={`sidebar-btn ${activeTab === 'rf8' ? 'active' : ''}`} onClick={() => setActiveTab('rf8')}><div className="sidebar-btn-icon"><FaCreditCard/></div> Pago</button>
+            <button className={`sidebar-btn ${activeTab === 'rf9' ? 'active' : ''}`} onClick={() => setActiveTab('rf9')}><div className="sidebar-btn-icon"><FaStar/></div> Calificación</button>
+            <button className={`sidebar-btn ${activeTab === 'rf10' ? 'active' : ''}`} onClick={() => setActiveTab('rf10')}><div className="sidebar-btn-icon"><FaBell/></div> Notificaciones</button>
+          </>
+        )}
 
-              <h3 style={{fontSize: '0.9rem', color: '#6C757D', margin: '1rem 0 0.5rem', textTransform: 'uppercase'}}>Administrador</h3>
-              <button className={`btn ${activeTab === 'rf15' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf15')}>Usuarios</button>
-              <button className={`btn ${activeTab === 'rf16' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf16')}>Flota</button>
-              <button className={`btn ${activeTab === 'rf17' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf17')}>Localidades</button>
-              <button className={`btn ${activeTab === 'rf18' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf18')}>Incidentes</button>
-              <button className={`btn ${activeTab === 'rf19' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf19')}>Reportes</button>
-              <button className={`btn ${activeTab === 'rf20' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf20')}>Configuración</button>
-            </div>
-          )}
+        {userRole === 'Conductor' && (
+          <>
+            <div className="sidebar-section-label">Modo Conductor</div>
+            <button className={`sidebar-btn ${activeTab === 'rf11' ? 'active' : ''}`} onClick={() => setActiveTab('rf11')}><div className="sidebar-btn-icon"><FaClipboardList/></div> Solicitudes</button>
+            <button className={`sidebar-btn ${activeTab === 'rf12' ? 'active' : ''}`} onClick={() => setActiveTab('rf12')}><div className="sidebar-btn-icon"><FaUsers/></div> Capacidad</button>
+            <button className={`sidebar-btn ${activeTab === 'rf13' ? 'active' : ''}`} onClick={() => setActiveTab('rf13')}><div className="sidebar-btn-icon"><FaMapSigns/></div> Zonas</button>
+            <button className={`sidebar-btn ${activeTab === 'rf14' ? 'active' : ''}`} onClick={() => setActiveTab('rf14')}><div className="sidebar-btn-icon"><FaHistory/></div> Historial</button>
+          </>
+        )}
 
-          <div style={{flex: 1}}>
-            {!isAuthenticated && (
-              <div className="nav-tabs">
-                <div className={`nav-tab ${activeTab === 'login' ? 'active' : ''}`} onClick={() => setActiveTab('login')}>Iniciar Sesión</div>
-                <div className={`nav-tab ${activeTab === 'register' ? 'active' : ''}`} onClick={() => setActiveTab('register')}>Registrarse</div>
-              </div>
-            )}
+        {userRole === 'Admin' && (
+          <>
+            <div className="sidebar-section-label">Panel Admin</div>
+            <button className={`sidebar-btn ${activeTab === 'rf15' ? 'active' : ''}`} onClick={() => setActiveTab('rf15')}><div className="sidebar-btn-icon"><FaUsersCog/></div> Usuarios</button>
+            <button className={`sidebar-btn ${activeTab === 'rf16' ? 'active' : ''}`} onClick={() => setActiveTab('rf16')}><div className="sidebar-btn-icon"><FaCar/></div> Flota</button>
+            <button className={`sidebar-btn ${activeTab === 'rf17' ? 'active' : ''}`} onClick={() => setActiveTab('rf17')}><div className="sidebar-btn-icon"><FaMapPin/></div> Localidades</button>
+            <button className={`sidebar-btn ${activeTab === 'rf18' ? 'active' : ''}`} onClick={() => setActiveTab('rf18')}><div className="sidebar-btn-icon"><FaExclamationTriangle/></div> Incidentes</button>
+            <button className={`sidebar-btn ${activeTab === 'rf19' ? 'active' : ''}`} onClick={() => setActiveTab('rf19')}><div className="sidebar-btn-icon"><FaChartBar/></div> Reportes</button>
+            <button className={`sidebar-btn ${activeTab === 'rf20' ? 'active' : ''}`} onClick={() => setActiveTab('rf20')}><div className="sidebar-btn-icon"><FaCog/></div> Configuración</button>
+          </>
+        )}
 
-            {!isAuthenticated && activeTab === 'login' && <Login onLogin={handleLogin} />}
-            {!isAuthenticated && activeTab === 'register' && <Register />}
-            
-            {isAuthenticated && activeTab === 'rf3' && <SolicitudGeolocalizada />}
-            {isAuthenticated && activeTab === 'rf4' && <Disponibilidad />}
-            {isAuthenticated && activeTab === 'rf5' && <CalculoRuta />}
-            {isAuthenticated && activeTab === 'rf6' && <CompartirViaje />}
-            {isAuthenticated && activeTab === 'rf7' && <PerfilTransparencia />}
-            {isAuthenticated && activeTab === 'rf8' && <Pago />}
-            {isAuthenticated && activeTab === 'rf9' && <Calificacion />}
-            {isAuthenticated && activeTab === 'rf10' && <Notificaciones />}
-            {isAuthenticated && activeTab === 'rf11' && <GestionSolicitudes />}
-            {isAuthenticated && activeTab === 'rf12' && <ControlCapacidad />}
-            {isAuthenticated && activeTab === 'rf13' && <ZonasPreferenciales />}
-            {isAuthenticated && activeTab === 'rf14' && <HistorialConductor />}
-            {isAuthenticated && activeTab === 'rf15' && <GestionUsuarios />}
-            {isAuthenticated && activeTab === 'rf16' && <GestionFlota />}
-            {isAuthenticated && activeTab === 'rf17' && <GestionLocalidades />}
-            {isAuthenticated && activeTab === 'rf18' && <GestionIncidentes />}
-            {isAuthenticated && activeTab === 'rf19' && <Reportes />}
-            {isAuthenticated && activeTab === 'rf20' && <Configuracion />}
-          </div>
-          
+        <div style={{ marginTop: 'auto', paddingTop: '2rem' }}>
+          <button className="sidebar-btn" onClick={handleLogout} style={{ color: 'var(--danger)' }}>
+            <div className="sidebar-btn-icon"><FaSignOutAlt/></div> Cerrar sesión
+          </button>
         </div>
+      </aside>
+
+      {/* Contenido principal */}
+      <main className="dashboard-main">
+        {activeTab === 'rf3' && <SolicitudGeolocalizada />}
+        {activeTab === 'rf4' && <Disponibilidad />}
+        {activeTab === 'rf5' && <CalculoRuta />}
+        {activeTab === 'rf6' && <CompartirViaje />}
+        {activeTab === 'rf7' && <PerfilTransparencia />}
+        {activeTab === 'rf8' && <Pago />}
+        {activeTab === 'rf9' && <Calificacion />}
+        {activeTab === 'rf10' && <Notificaciones />}
+        
+        {activeTab === 'rf11' && <GestionSolicitudes />}
+        {activeTab === 'rf12' && <ControlCapacidad />}
+        {activeTab === 'rf13' && <ZonasPreferenciales />}
+        {activeTab === 'rf14' && <HistorialConductor />}
+
+        {activeTab === 'rf15' && <GestionUsuarios />}
+        {activeTab === 'rf16' && <GestionFlota />}
+        {activeTab === 'rf17' && <GestionLocalidades />}
+        {activeTab === 'rf18' && <GestionIncidentes />}
+        {activeTab === 'rf19' && <Reportes />}
+        {activeTab === 'rf20' && <Configuracion />}
       </main>
     </div>
   );

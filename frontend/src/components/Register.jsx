@@ -1,61 +1,76 @@
 import { useState } from 'react';
+import { FaUserAlt, FaEnvelope, FaLock, FaIdCard, FaTimes, FaCarSide } from 'react-icons/fa';
 
-export default function Register() {
+export default function Register({ onClose }) {
   const [role, setRole] = useState('Pasajero');
-
+  
   return (
-    <div className="card">
-      <h2 className="card-title">Registro Multicanal</h2>
-      
-      <div className="form-group">
-        <span className="form-label">Tipo de usuario</span>
-        <div className="radio-group">
-          <label className="radio-label">
-            <input type="radio" name="role" checked={role === 'Pasajero'} onChange={() => setRole('Pasajero')} />
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-box" onClick={e => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose}><FaTimes /></button>
+        
+        <h2 className="modal-title">Crea tu cuenta</h2>
+        <p className="modal-subtitle">Únete a la comunidad de TaxiEc hoy mismo.</p>
+
+        <div className="modal-tabs">
+          <button className={`modal-tab ${role === 'Pasajero' ? 'active' : ''}`} onClick={() => setRole('Pasajero')}>
             Pasajero
-          </label>
-          <label className="radio-label">
-            <input type="radio" name="role" checked={role === 'Conductor'} onChange={() => setRole('Conductor')} />
+          </button>
+          <button className={`modal-tab ${role === 'Conductor' ? 'active' : ''}`} onClick={() => setRole('Conductor')}>
             Conductor
-          </label>
-          <label className="radio-label">
-            <input type="radio" name="role" checked={role === 'Administrador'} onChange={() => setRole('Administrador')} />
-            Administrador
-          </label>
+          </button>
         </div>
-      </div>
 
-      <div className="form-group">
-        <label className="form-label">Tipo de registro</label>
-        <select className="form-control">
-          <option>Número telefónico</option>
-          <option>Correo electrónico</option>
-        </select>
-      </div>
+        <div className="form-group">
+          <label className="form-label">Nombre completo</label>
+          <div className="form-input-icon">
+            <FaUserAlt className="icon" />
+            <input type="text" className="form-input" placeholder="Ej. Juan Pérez" />
+          </div>
+        </div>
 
-      <div className="form-group">
-        <label className="form-label">Nombre completo</label>
-        <input type="text" className="form-control" placeholder="Ej. Juan Pérez" />
-      </div>
+        <div className="form-group">
+          <label className="form-label">Correo electrónico</label>
+          <div className="form-input-icon">
+            <FaEnvelope className="icon" />
+            <input type="email" className="form-input" placeholder="tu@correo.com" />
+          </div>
+        </div>
 
-      <div className="form-group">
-        <label className="form-label">Correo / Teléfono</label>
-        <input type="text" className="form-control" placeholder="juan@correo.com / 0991234567" />
-      </div>
+        <div className="form-group" style={{ display: 'flex', gap: '1rem' }}>
+          <div style={{ flex: 1 }}>
+            <label className="form-label">Contraseña</label>
+            <div className="form-input-icon">
+              <FaLock className="icon" />
+              <input type="password" className="form-input" placeholder="••••••••" />
+            </div>
+          </div>
+          <div style={{ flex: 1 }}>
+            <label className="form-label">Confirmar</label>
+            <div className="form-input-icon">
+              <FaLock className="icon" />
+              <input type="password" className="form-input" placeholder="••••••••" />
+            </div>
+          </div>
+        </div>
 
-      <div className="form-group">
-        <label className="form-label">Contraseña</label>
-        <input type="password" className="form-control" placeholder="Mín. 6 caracteres" />
-      </div>
+        {role === 'Conductor' && (
+          <div className="form-group">
+            <label className="form-label">Número de Licencia</label>
+            <div className="form-input-icon">
+              <FaIdCard className="icon" />
+              <input type="text" className="form-input" placeholder="Ej. 0912345678" />
+            </div>
+          </div>
+        )}
 
-      <div className="form-group">
-        <label className="form-label">Estado de verificación</label>
-        <input type="text" className="form-control" value="Pendiente validación" disabled />
-      </div>
-
-      <div className="button-group">
-        <button className="btn btn-secondary">Cancelar</button>
-        <button className="btn btn-primary">Registrar Usuario</button>
+        <button className="btn btn-full btn-full-yellow" style={{marginTop: '1.5rem'}}>
+          Registrar {role}
+        </button>
+        
+        <p style={{fontSize: '0.8rem', color: 'var(--gray-500)', textAlign: 'center', marginTop: '1rem'}}>
+          Al registrarte aceptas nuestros <a href="#" style={{color: 'var(--yellow-400)'}}>términos y condiciones</a>.
+        </p>
       </div>
     </div>
   );
