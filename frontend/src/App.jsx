@@ -9,6 +9,10 @@ import CompartirViaje from './components/CompartirViaje';
 import Pago from './components/Pago';
 import Calificacion from './components/Calificacion';
 import Notificaciones from './components/Notificaciones';
+import GestionSolicitudes from './components/GestionSolicitudes';
+import ControlCapacidad from './components/ControlCapacidad';
+import ZonasPreferenciales from './components/ZonasPreferenciales';
+import HistorialConductor from './components/HistorialConductor';
 import './App.css';
 
 function App() {
@@ -58,6 +62,12 @@ function App() {
               <button className={`btn ${activeTab === 'rf10' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf10')}>
                 Notificaciones
               </button>
+
+              <h3 style={{fontSize: '0.9rem', color: '#6C757D', margin: '1rem 0 0.5rem', textTransform: 'uppercase'}}>Conductor</h3>
+              <button className={`btn ${activeTab === 'rf11' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf11')}>Solicitudes</button>
+              <button className={`btn ${activeTab === 'rf12' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf12')}>Capacidad</button>
+              <button className={`btn ${activeTab === 'rf13' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf13')}>Zonas</button>
+              <button className={`btn ${activeTab === 'rf14' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf14')}>Historial</button>
             </div>
           )}
 
@@ -80,6 +90,10 @@ function App() {
             {isAuthenticated && activeTab === 'rf8' && <Pago />}
             {isAuthenticated && activeTab === 'rf9' && <Calificacion />}
             {isAuthenticated && activeTab === 'rf10' && <Notificaciones />}
+            {isAuthenticated && activeTab === 'rf11' && <GestionSolicitudes />}
+            {isAuthenticated && activeTab === 'rf12' && <ControlCapacidad />}
+            {isAuthenticated && activeTab === 'rf13' && <ZonasPreferenciales />}
+            {isAuthenticated && activeTab === 'rf14' && <HistorialConductor />}
           </div>
           
         </div>
