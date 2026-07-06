@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
+import UserPanel from './components/UserPanel';
 import SolicitudGeolocalizada from './components/SolicitudGeolocalizada';
 import Disponibilidad from './components/Disponibilidad';
 import CalculoRuta from './components/CalculoRuta';
@@ -20,7 +21,12 @@ import GestionLocalidades from './components/GestionLocalidades';
 import GestionIncidentes from './components/GestionIncidentes';
 import Reportes from './components/Reportes';
 import Configuracion from './components/Configuracion';
-import { FaCarSide, FaSignOutAlt, FaMapMarkedAlt, FaSearchLocation, FaRoute, FaShareAlt, FaUserTie, FaCreditCard, FaStar, FaBell, FaClipboardList, FaUsers, FaMapSigns, FaHistory, FaUsersCog, FaCar, FaMapPin, FaExclamationTriangle, FaChartBar, FaCog } from 'react-icons/fa';
+import {
+  FaCarSide, FaSignOutAlt, FaMapMarkedAlt, FaSearchLocation, FaRoute, FaShareAlt,
+  FaUserTie, FaCreditCard, FaStar, FaBell, FaClipboardList, FaUsers, FaMapSigns,
+  FaHistory, FaUsersCog, FaCar, FaMapPin, FaExclamationTriangle, FaChartBar, FaCog,
+  FaUserCircle
+} from 'react-icons/fa';
 import './App.css';
 
 function App() {
@@ -28,9 +34,12 @@ function App() {
   const [activeTab, setActiveTab] = useState('rf3');
   const [showModal, setShowModal] = useState(null); // 'login' | 'register' | null
   const [userRole, setUserRole] = useState('Pasajero');
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showUserPanel, setShowUserPanel] = useState(false);
 
-  const handleLogin = (role) => {
+  const handleLogin = (role, userData) => {
     setUserRole(role);
+    setCurrentUser(userData || { nombres: role, apellidos: '', correo: '', telefono: '' });
     setIsAuthenticated(true);
     setShowModal(null);
     if (role === 'Pasajero') setActiveTab('rf3');
@@ -40,22 +49,35 @@ function App() {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    setCurrentUser(null);
     setActiveTab('rf3');
+    setShowUserPanel(false);
   };
 
   if (!isAuthenticated) {
     return (
       <>
         <Home onNavigate={setShowModal} />
-        {showModal === 'login' && <Login onLogin={handleLogin} onClose={() => setShowModal(null)} />}
-        {showModal === 'register' && <Register onClose={() => setShowModal(null)} />}
+        {showModal === 'login' && (
+          <Login
+            onLogin={handleLogin}
+            onClose={() => setShowModal(null)}
+            onSwitchToRegister={() => setShowModal('register')}
+          />
+        )}
+        {showModal === 'register' && (
+          <Register
+            onClose={() => setShowModal(null)}
+            onSwitchToLogin={() => setShowModal('login')}
+          />
+        )}
       </>
     );
   }
 
   return (
     <div className="dashboard-layout">
-      {/* Sidebar */}
+      {/* Sidebar de navegación */}
       <aside className="sidebar">
         <div className="sidebar-brand">
           <div className="sidebar-brand-icon"><FaCarSide /></div>
@@ -98,29 +120,41 @@ function App() {
           </>
         )}
 
-        <div style={{ marginTop: 'auto', paddingTop: '2rem' }}>
-          <button className="sidebar-btn" onClick={handleLogout} style={{ color: 'var(--danger)' }}>
-            <div className="sidebar-btn-icon"><FaSignOutAlt/></div> Cerrar sesión
+        {/* Footer del sidebar: perfil + cerrar sesión */}
+        <div className="sidebar-footer">
+          <button
+            className="sidebar-user-btn"
+            onClick={() => setShowUserPanel(!showUserPanel)}
+            title="Ver mi perfil"
+          >
+            <div className="sidebar-user-avatar"><FaUserCircle /></div>
+            <div className="sidebar-user-info">
+              <div className="sidebar-user-name">
+                {currentUser?.nombres || userRole}
+              </div>
+              <div className="sidebar-user-role">{userRole}</div>
+            </div>
+          </button>
+          <button className="sidebar-logout-btn" onClick={handleLogout} title="Cerrar sesión">
+            <FaSignOutAlt />
           </button>
         </div>
       </aside>
 
       {/* Contenido principal */}
-      <main className="dashboard-main">
-        {activeTab === 'rf3' && <SolicitudGeolocalizada />}
-        {activeTab === 'rf4' && <Disponibilidad />}
-        {activeTab === 'rf5' && <CalculoRuta />}
-        {activeTab === 'rf6' && <CompartirViaje />}
-        {activeTab === 'rf7' && <PerfilTransparencia />}
-        {activeTab === 'rf8' && <Pago />}
-        {activeTab === 'rf9' && <Calificacion />}
+      <main className={`dashboard-main ${showUserPanel ? 'panel-open' : ''}`}>
+        {activeTab === 'rf3'  && <SolicitudGeolocalizada />}
+        {activeTab === 'rf4'  && <Disponibilidad />}
+        {activeTab === 'rf5'  && <CalculoRuta />}
+        {activeTab === 'rf6'  && <CompartirViaje />}
+        {activeTab === 'rf7'  && <PerfilTransparencia />}
+        {activeTab === 'rf8'  && <Pago />}
+        {activeTab === 'rf9'  && <Calificacion />}
         {activeTab === 'rf10' && <Notificaciones />}
-        
         {activeTab === 'rf11' && <GestionSolicitudes />}
         {activeTab === 'rf12' && <ControlCapacidad />}
         {activeTab === 'rf13' && <ZonasPreferenciales />}
         {activeTab === 'rf14' && <HistorialConductor />}
-
         {activeTab === 'rf15' && <GestionUsuarios />}
         {activeTab === 'rf16' && <GestionFlota />}
         {activeTab === 'rf17' && <GestionLocalidades />}
@@ -128,6 +162,15 @@ function App() {
         {activeTab === 'rf19' && <Reportes />}
         {activeTab === 'rf20' && <Configuracion />}
       </main>
+
+      {/* Panel lateral de perfil de usuario (deslizable) */}
+      {showUserPanel && (
+        <UserPanel
+          user={currentUser}
+          role={userRole}
+          onClose={() => setShowUserPanel(false)}
+        />
+      )}
     </div>
   );
 }
