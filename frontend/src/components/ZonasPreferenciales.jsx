@@ -1,89 +1,85 @@
 import React, { useState } from 'react';
+import MapaInteractivo from './MapaInteractivo';
+import { FaMapMarkerAlt, FaTrash, FaPlus, FaClock, FaCheck } from 'react-icons/fa';
+
+const ZONAS_MOCK = [
+  { id: 1, nombre: 'Centro Histórico', lat: -2.1944, lng: -79.8811, dias: ['Lun', 'Mar', 'Mié'], horario: '07:00 - 12:00', color: '#f59e0b' },
+  { id: 2, nombre: 'Norte de Guayaquil', lat: -2.1200, lng: -79.8900, dias: ['Jue', 'Vie'], horario: '14:00 - 20:00', color: '#3b82f6' },
+];
 
 export default function ZonasPreferenciales() {
-  const [zonas, setZonas] = useState([
-    { id: 1, nombre: 'Centro Histórico', horario: '06:00 - 10:00', estado: 'VIGENTE' },
-    { id: 2, nombre: 'Urdesa Norte', horario: '16:00 - 20:00', estado: 'VIGENTE' },
-    { id: 3, nombre: 'Puerto Santa Ana', horario: '07:00 - 09:00', estado: 'INACTIVA' },
-  ]);
+  const [zonas, setZonas] = useState(ZONAS_MOCK);
+  const [guardado, setGuardado] = useState(false);
 
-  const [nueva, setNueva] = useState({ nombre: '', inicio: '', fin: '' });
-  const [modo, setModo] = useState('lista'); // 'lista' | 'nueva'
+  const eliminarZona = (id) => setZonas(prev => prev.filter(z => z.id !== id));
 
-  const agregarZona = () => {
-    if (!nueva.nombre || !nueva.inicio || !nueva.fin) return;
-    setZonas(prev => [...prev, {
-      id: prev.length + 1,
-      nombre: nueva.nombre,
-      horario: `${nueva.inicio} - ${nueva.fin}`,
-      estado: 'VIGENTE',
-    }]);
-    setNueva({ nombre: '', inicio: '', fin: '' });
-    setModo('lista');
-  };
-
-  const toggleEstado = (id) => {
-    setZonas(prev => prev.map(z => z.id === id ? { ...z, estado: z.estado === 'VIGENTE' ? 'INACTIVA' : 'VIGENTE' } : z));
+  const guardar = () => {
+    setGuardado(true);
+    setTimeout(() => setGuardado(false), 2000);
   };
 
   return (
-    <div className="card" style={{ maxWidth: '560px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.4rem', fontWeight: 700, margin: 0 }}>Zonas Preferenciales (RF-13)</h2>
-        <button
-          className="btn btn-primary"
-          style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem' }}
-          onClick={() => setModo(modo === 'lista' ? 'nueva' : 'lista')}
-        >
-          {modo === 'lista' ? '+ Nueva zona' : '← Volver'}
-        </button>
+    <div className="map-view-container">
+      <div className="map-background">
+        <MapaInteractivo
+          origen={[-2.1894, -79.8891]}
+          destino={null}
+        />
       </div>
 
-      {modo === 'nueva' && (
-        <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: '10px', padding: '1.25rem', marginBottom: '1.5rem' }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem', color: '#92400E' }}>Registrar nueva zona</h3>
-          <div className="form-group">
-            <label className="form-label">Nombre de la zona</label>
-            <input type="text" className="form-control" placeholder="Ej. Alborada 4ta Etapa" value={nueva.nombre} onChange={e => setNueva({ ...nueva, nombre: e.target.value })} />
-          </div>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <div className="form-group" style={{ flex: 1 }}>
-              <label className="form-label">Horario inicio</label>
-              <input type="time" className="form-control" value={nueva.inicio} onChange={e => setNueva({ ...nueva, inicio: e.target.value })} />
-            </div>
-            <div className="form-group" style={{ flex: 1 }}>
-              <label className="form-label">Horario fin</label>
-              <input type="time" className="form-control" value={nueva.fin} onChange={e => setNueva({ ...nueva, fin: e.target.value })} />
-            </div>
-          </div>
-          <button className="btn btn-primary" onClick={agregarZona}>Guardar zona</button>
+      <div className="floating-panel" style={{ width: '360px' }}>
+        <div className="floating-panel-header">
+          <h2>Zonas Preferenciales</h2>
+          <p style={{ color: 'var(--gray-400)', fontSize: '0.82rem', marginTop: '0.3rem', marginBottom: 0 }}>
+            RF-15 · Define hasta 3 zonas donde quieres operar.
+          </p>
         </div>
-      )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-        {zonas.map(z => (
-          <div key={z.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid #E5E7EB', background: z.estado === 'VIGENTE' ? '#F0FDF4' : '#F9FAFB' }}>
-            <div>
-              <p style={{ margin: 0, fontWeight: 600 }}>📍 {z.nombre}</p>
-              <p style={{ margin: '0.15rem 0 0', fontSize: '0.82rem', color: '#6C757D' }}>🕐 {z.horario}</p>
+        <div className="floating-panel-body">
+          {zonas.map((zona) => (
+            <div key={zona.id} style={{
+              background: 'rgba(0,0,0,0.3)',
+              borderRadius: '12px',
+              padding: '1rem',
+              marginBottom: '0.75rem',
+              border: `1px solid ${zona.color}40`,
+              position: 'relative'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: zona.color, flexShrink: 0 }}></div>
+                <span style={{ color: 'white', fontWeight: 'bold', flex: 1 }}>{zona.nombre}</span>
+                <button onClick={() => eliminarZona(zona.id)} style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '0.2rem' }}>
+                  <FaTrash size={12} />
+                </button>
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+                {zona.dias.map(d => (
+                  <span key={d} style={{ background: `${zona.color}20`, color: zona.color, padding: '0.15rem 0.5rem', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 'bold' }}>{d}</span>
+                ))}
+              </div>
+              <div style={{ color: 'var(--gray-400)', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <FaClock size={10} /> {zona.horario}
+              </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <span style={{
-                background: z.estado === 'VIGENTE' ? '#D1FAE5' : '#F3F4F6',
-                color: z.estado === 'VIGENTE' ? '#065F46' : '#9CA3AF',
-                padding: '3px 10px', borderRadius: '12px', fontSize: '0.78rem', fontWeight: 600,
-              }}>
-                {z.estado}
-              </span>
-              <button
-                onClick={() => toggleEstado(z.id)}
-                style={{ background: 'none', border: '1px solid #E5E7EB', borderRadius: '6px', padding: '4px 8px', cursor: 'pointer', fontSize: '0.8rem', color: '#6C757D' }}
-              >
-                {z.estado === 'VIGENTE' ? 'Desactivar' : 'Activar'}
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
+
+          {zonas.length < 3 && (
+            <button
+              style={{ width: '100%', background: 'transparent', border: '1px dashed var(--border)', color: 'var(--gray-400)', padding: '0.85rem', borderRadius: '12px', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', transition: 'all 0.2s' }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--yellow-400)'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+            >
+              <FaPlus /> Agregar zona ({3 - zonas.length} disponibles)
+            </button>
+          )}
+
+          <button
+            onClick={guardar}
+            style={{ width: '100%', background: guardado ? '#10b981' : 'linear-gradient(135deg, #f59e0b, #d97706)', border: 'none', color: guardado ? 'white' : '#000', padding: '1rem', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', transition: 'all 0.3s', fontSize: '1rem' }}
+          >
+            {guardado ? <><FaCheck /> Guardado</> : 'Guardar Zonas'}
+          </button>
+        </div>
       </div>
     </div>
   );
