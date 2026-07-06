@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function Login() {
+export default function Login({ onLogin }) {
   const [role, setRole] = useState('Pasajero');
 
   return (
@@ -47,7 +47,7 @@ export default function Login() {
 
       <div className="button-group">
         <button className="btn btn-secondary">Restablecer</button>
-        <button className="btn btn-primary">Ingresar al Sistema</button>
+        <button className="btn btn-primary" onClick={onLogin}>Ingresar al Sistema</button>
       </div>
     </div>
   );
