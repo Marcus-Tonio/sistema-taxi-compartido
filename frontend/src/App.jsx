@@ -13,6 +13,12 @@ import GestionSolicitudes from './components/GestionSolicitudes';
 import ControlCapacidad from './components/ControlCapacidad';
 import ZonasPreferenciales from './components/ZonasPreferenciales';
 import HistorialConductor from './components/HistorialConductor';
+import GestionUsuarios from './components/GestionUsuarios';
+import GestionFlota from './components/GestionFlota';
+import GestionLocalidades from './components/GestionLocalidades';
+import GestionIncidentes from './components/GestionIncidentes';
+import Reportes from './components/Reportes';
+import Configuracion from './components/Configuracion';
 import './App.css';
 
 function App() {
@@ -68,6 +74,14 @@ function App() {
               <button className={`btn ${activeTab === 'rf12' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf12')}>Capacidad</button>
               <button className={`btn ${activeTab === 'rf13' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf13')}>Zonas</button>
               <button className={`btn ${activeTab === 'rf14' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf14')}>Historial</button>
+
+              <h3 style={{fontSize: '0.9rem', color: '#6C757D', margin: '1rem 0 0.5rem', textTransform: 'uppercase'}}>Administrador</h3>
+              <button className={`btn ${activeTab === 'rf15' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf15')}>Usuarios</button>
+              <button className={`btn ${activeTab === 'rf16' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf16')}>Flota</button>
+              <button className={`btn ${activeTab === 'rf17' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf17')}>Localidades</button>
+              <button className={`btn ${activeTab === 'rf18' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf18')}>Incidentes</button>
+              <button className={`btn ${activeTab === 'rf19' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf19')}>Reportes</button>
+              <button className={`btn ${activeTab === 'rf20' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('rf20')}>Configuración</button>
             </div>
           )}
 
@@ -94,6 +108,12 @@ function App() {
             {isAuthenticated && activeTab === 'rf12' && <ControlCapacidad />}
             {isAuthenticated && activeTab === 'rf13' && <ZonasPreferenciales />}
             {isAuthenticated && activeTab === 'rf14' && <HistorialConductor />}
+            {isAuthenticated && activeTab === 'rf15' && <GestionUsuarios />}
+            {isAuthenticated && activeTab === 'rf16' && <GestionFlota />}
+            {isAuthenticated && activeTab === 'rf17' && <GestionLocalidades />}
+            {isAuthenticated && activeTab === 'rf18' && <GestionIncidentes />}
+            {isAuthenticated && activeTab === 'rf19' && <Reportes />}
+            {isAuthenticated && activeTab === 'rf20' && <Configuracion />}
           </div>
           
         </div>
