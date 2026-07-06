@@ -22,6 +22,8 @@ import ControlCapacidad from './components/ControlCapacidad';
 import GestionIncidentes from './components/GestionIncidentes';
 import Reportes from './components/Reportes';
 import Configuracion from './components/Configuracion';
+import BotonEmergencia from './components/BotonEmergencia';
+import ReporteIncidente from './components/ReporteIncidente';
 import {
   FaCarSide, FaSignOutAlt, FaMapMarkedAlt, FaSearchLocation, FaRoute,
   FaUserTie, FaCreditCard, FaStar, FaBell, FaClipboardList, FaMapSigns,
@@ -118,6 +120,12 @@ function App() {
             <button className={`sidebar-btn ${activeTab === 'rf16p' ? 'active' : ''}`} onClick={() => setActiveTab('rf16p')}>
               <div className="sidebar-btn-icon"><FaHistory/></div> Historial
             </button>
+            <button className={`sidebar-btn ${activeTab === 'rf19' ? 'active' : ''}`} onClick={() => setActiveTab('rf19')}>
+              <div className="sidebar-btn-icon"><FaExclamationTriangle/></div> Incidentes
+            </button>
+            <button className={`sidebar-btn ${activeTab === 'rf20' ? 'active' : ''}`} onClick={() => setActiveTab('rf20')}>
+              <div className="sidebar-btn-icon"><FaShieldAlt/></div> Emergencia
+            </button>
           </>
         )}
 
@@ -133,6 +141,18 @@ function App() {
             </button>
             <button className={`sidebar-btn ${activeTab === 'rf16c' ? 'active' : ''}`} onClick={() => setActiveTab('rf16c')}>
               <div className="sidebar-btn-icon"><FaHistory/></div> Historial
+            </button>
+            <button className={`sidebar-btn ${activeTab === 'rf9' ? 'active' : ''}`} onClick={() => setActiveTab('rf9')}>
+              <div className="sidebar-btn-icon"><FaStar/></div> Mis Calificaciones
+            </button>
+            <button className={`sidebar-btn ${activeTab === 'rf10' ? 'active' : ''}`} onClick={() => setActiveTab('rf10')}>
+              <div className="sidebar-btn-icon"><FaBell/></div> Notificaciones
+            </button>
+            <button className={`sidebar-btn ${activeTab === 'rf19' ? 'active' : ''}`} onClick={() => setActiveTab('rf19')}>
+              <div className="sidebar-btn-icon"><FaExclamationTriangle/></div> Incidentes
+            </button>
+            <button className={`sidebar-btn ${activeTab === 'rf20' ? 'active' : ''}`} onClick={() => setActiveTab('rf20')}>
+              <div className="sidebar-btn-icon"><FaShieldAlt/></div> Emergencia
             </button>
           </>
         )}
@@ -192,11 +212,15 @@ function App() {
         {activeTab === 'rf13' && <Pago />}
         {activeTab === 'rf14' && <UbicacionesFavoritas />}
         {activeTab === 'rf16p'&& <HistorialPasajero />}
+        {activeTab === 'rf19' && <ReporteIncidente />}
+        {activeTab === 'rf20' && <BotonEmergencia />}
 
         {/* ── VISTAS CONDUCTOR ── */}
         {activeTab === 'rf8'  && <GestionSolicitudes />}
         {activeTab === 'rf15' && <ZonasPreferenciales />}
         {activeTab === 'rf16c'&& <HistorialConductor />}
+        {activeTab === 'rf9'  && <Calificacion />}
+        {activeTab === 'rf10' && <Notificaciones />}
 
         {/* ── VISTAS ADMIN ── */}
         {activeTab === 'admin-usuarios'  && <GestionUsuarios />}
