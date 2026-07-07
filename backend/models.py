@@ -12,6 +12,7 @@ class UsuarioBase(BaseModel):
     telefono: str
     contrasena: str
     idioma: Optional[str] = "ES"
+    rol: Optional[str] = "CLIENTE"
 
 class UsuarioCreate(UsuarioBase):
     pass
@@ -20,6 +21,11 @@ class UsuarioResponse(UsuarioBase):
     id_usuario: int
     fecha_registro: date
     estado_cuenta: str
+    rol: str
+
+class UsuarioLogin(BaseModel):
+    correo: str
+    contrasena: str
 
 # ==========================================
 # MODELOS PARA VEHICULO

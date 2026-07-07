@@ -19,12 +19,12 @@ def read_root():
 
 @app.get("/db-status")
 def test_db_connection():
-    """Prueba la conexión a la base de datos Oracle"""
+    """Prueba la conexión a la base de datos PostgreSQL"""
     conn = get_connection()
     if conn:
         version = conn.version
         conn.close()
-        return {"status": "success", "message": f"Conectado a Oracle Database versión {version}"}
+        return {"status": "success", "message": f"Conectado a PostgreSQL (Supabase) versión {version}"}
     return {"status": "error", "message": "No se pudo conectar a la base de datos. Verifica las credenciales en .env"}
 
 from routers import cruds, transacciones, consultas

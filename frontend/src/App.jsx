@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -33,13 +33,32 @@ import {
 import './App.css';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [activeTab, setActiveTab] = useState('rf3');
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('isAuthenticated') === 'true';
+  });
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem('activeTab') || 'rf3';
+  });
   const [showModal, setShowModal] = useState(null);
-  const [userRole, setUserRole] = useState('Pasajero');
-  const [currentUser, setCurrentUser] = useState(null);
+  const [userRole, setUserRole] = useState(() => {
+    return localStorage.getItem('userRole') || 'Pasajero';
+  });
+  const [currentUser, setCurrentUser] = useState(() => {
+    const saved = localStorage.getItem('currentUser');
+    return saved ? JSON.parse(saved) : null;
+  });
   const [showUserPanel, setShowUserPanel] = useState(false);
 
+  useEffect(() => {
+    localStorage.setItem('isAuthenticated', isAuthenticated);
+    localStorage.setItem('activeTab', activeTab);
+    localStorage.setItem('userRole', userRole);
+    if (currentUser) {
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem('currentUser');
+    }
+  }, [isAuthenticated, activeTab, userRole, currentUser]);
   const handleLogin = (role, userData) => {
     setUserRole(role);
     setCurrentUser(userData || { nombres: role, apellidos: '', correo: '', telefono: '' });

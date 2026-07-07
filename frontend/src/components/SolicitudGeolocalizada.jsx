@@ -12,10 +12,29 @@ const LUGARES = [
 
 export default function SolicitudGeolocalizada() {
   const [paso, setPaso] = useState(1); // 1: Seleccionar Destino, 2: Seleccionar Modalidad/Ver Conductores, 3: Confirmación
-  const [origen, setOrigen] = useState(LUGARES[1]); // Simulando que el usuario está en la U
+  const [origen, setOrigen] = useState(LUGARES[1]); // Valor por defecto
   const [destino, setDestino] = useState(null);
   const [tipoServicio, setTipoServicio] = useState('Compartido');
   
+  // Solicitar ubicación del usuario al cargar el componente
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setOrigen({
+            nombre: "Mi Ubicación Actual",
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error("Error obteniendo ubicación:", error);
+          // Si rechaza, se queda con el valor por defecto (LUGARES[1])
+        }
+      );
+    }
+  }, []);
+
   // Estados para simular cálculo de tarifas
   const [distancia, setDistancia] = useState(0);
   const [tarifaEstimada, setTarifaEstimada] = useState(0);

@@ -26,7 +26,8 @@ CREATE TABLE USUARIO (
     telefono       VARCHAR(20),
     contrasena     VARCHAR(255)   NOT NULL,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    estado_usuario VARCHAR(20) CHECK (estado_usuario IN ('ACTIVO', 'SUSPENDIDO'))
+    estado_usuario VARCHAR(20) CHECK (estado_usuario IN ('ACTIVO', 'SUSPENDIDO')),
+    rol            VARCHAR(20) DEFAULT 'CLIENTE' CHECK (rol IN ('CLIENTE', 'ADMIN', 'CONDUCTOR'))
 );
 
 CREATE TABLE CONDUCTOR (

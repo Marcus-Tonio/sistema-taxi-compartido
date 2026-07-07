@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from typing import List
 import psycopg2
 from database import get_connection
-from models import UsuarioCreate, VehiculoCreate, CuponCreate
+from models import UsuarioCreate, UsuarioLogin, VehiculoCreate, CuponCreate
 
 router = APIRouter()
 
@@ -18,7 +18,7 @@ def obtener_usuarios():
     
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id_usuario, nombre, apellido, correo, telefono, estado_usuario, fecha_registro FROM USUARIO")
+        cursor.execute("SELECT id_usuario, nombre, apellido, correo, telefono, estado_usuario, fecha_registro, rol FROM USUARIO")
         rows = cursor.fetchall()
         
         usuarios = []
@@ -30,7 +30,8 @@ def obtener_usuarios():
                 "correo": row[3],
                 "telefono": row[4],
                 "estado_cuenta": row[5],
-                "fecha_registro": row[6]
+                "fecha_registro": row[6],
+                "rol": row[7] if len(row) > 7 else "CLIENTE"
             })
         return usuarios
     except psycopg2.Error as e:
@@ -47,15 +48,46 @@ def crear_usuario(usuario: UsuarioCreate):
     try:
         cursor = conn.cursor()
         sql = """
-            INSERT INTO USUARIO (nombre, apellido, correo, telefono, contrasena, estado_usuario)
-            VALUES (%s, %s, %s, %s, %s, 'ACTIVO') RETURNING id_usuario
+            INSERT INTO USUARIO (nombre, apellido, correo, telefono, contrasena, estado_usuario, rol)
+            VALUES (%s, %s, %s, %s, %s, 'ACTIVO', %s) RETURNING id_usuario
         """
-        cursor.execute(sql, (usuario.nombres, usuario.apellidos, usuario.correo, usuario.telefono, usuario.contrasena))
+        cursor.execute(sql, (usuario.nombres, usuario.apellidos, usuario.correo, usuario.telefono, usuario.contrasena, usuario.rol))
         nuevo_id = cursor.fetchone()[0]
         conn.commit()
         return {"message": "Usuario creado exitosamente", "id_usuario": nuevo_id}
     except psycopg2.Error as e:
         conn.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        conn.close()
+
+@router.post("/login/", tags=["Usuarios"])
+def login_usuario(usuario: UsuarioLogin):
+    conn = get_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Error de conexión a la base de datos")
+    
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id_usuario, nombre, apellido, rol FROM USUARIO WHERE correo = %s AND contrasena = %s AND estado_usuario = 'ACTIVO'",
+            (usuario.correo, usuario.contrasena)
+        )
+        user = cursor.fetchone()
+        
+        if not user:
+            raise HTTPException(status_code=401, detail="Credenciales incorrectas o cuenta inactiva")
+            
+        return {
+            "message": "Login exitoso",
+            "usuario": {
+                "id_usuario": user[0],
+                "nombres": user[1],
+                "apellidos": user[2],
+                "rol": user[3]
+            }
+        }
+    except psycopg2.Error as e:
         raise HTTPException(status_code=400, detail=str(e))
     finally:
         conn.close()
