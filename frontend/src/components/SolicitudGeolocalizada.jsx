@@ -48,8 +48,45 @@ export default function SolicitudGeolocalizada() {
     setPaso(2);
   };
 
-  const confirmarViaje = () => {
+  const confirmarViaje = async () => {
     setPaso(3);
+    
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { id_usuario: 1 };
+      
+      const payload = {
+        id_usuario: currentUser.id_usuario || 1,
+        origen: origen.nombre,
+        destino: destino.nombre,
+        cantidad_asientos: tipoServicio === 'Compartido' ? 1 : 4,
+        fecha_viaje: new Date().toISOString()
+      };
+
+      const response = await fetch('http://localhost:8000/viajes/solicitar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Viaje solicitado con éxito:", data);
+        // Simulamos que encuentra conductor después de 2 segundos para no dejarlo cargando infinito
+        setTimeout(() => {
+          alert(`¡Conductor asignado! Viaje ID: ${data.id_viaje}, Reserva ID: ${data.id_reserva}`);
+          setPaso(1);
+          setDestino(null);
+        }, 2000);
+      } else {
+        const err = await response.json();
+        alert(`Error al solicitar: ${err.detail}`);
+        setPaso(2);
+      }
+    } catch (error) {
+      console.error("Error en la petición:", error);
+      alert("Error de red al conectar con el servidor.");
+      setPaso(2);
+    }
   };
 
   return (

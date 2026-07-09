@@ -32,10 +32,36 @@ export default function GestionSolicitudes() {
   const [solicitudes, setSolicitudes] = useState(solicitudesMock);
   const [aceptadas, setAceptadas] = useState([]);
 
-  const aceptar = (id) => {
-    const sol = solicitudes.find(s => s.id === id);
-    setAceptadas(prev => [sol, ...prev]);
-    setSolicitudes(prev => prev.filter(s => s.id !== id));
+  const aceptar = async (id) => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { id_usuario: 2 };
+      
+      // Simulamos los IDs que vendrían de la DB para la solicitud real
+      const payload = {
+        id_reserva: 100 + id,
+        id_viaje: 500 + id,
+        id_conductor: currentUser.id_usuario || 2
+      };
+
+      const response = await fetch('http://localhost:8000/viajes/aceptar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        const sol = solicitudes.find(s => s.id === id);
+        setAceptadas(prev => [sol, ...prev]);
+        setSolicitudes(prev => prev.filter(s => s.id !== id));
+        alert("¡Transacción Exitosa! Viaje aceptado en la base de datos.");
+      } else {
+        const err = await response.json();
+        alert(`Error: ${err.detail}`);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error de conexión al aceptar viaje.");
+    }
   };
 
   const rechazar = (id) => {

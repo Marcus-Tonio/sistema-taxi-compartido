@@ -1,64 +1,108 @@
-import React, { useState } from 'react';
-
-const flota = [
-  { id: 1, conductor: 'Manuel Pauta', placa: 'GBT-0234', modelo: 'Chevrolet Aveo · Blanco', capacidad: 4, estado: 'DISPONIBLE', viajesToday: 6 },
-  { id: 2, conductor: 'Roberto Vélez', placa: 'GCA-1127', modelo: 'Toyota Yaris · Gris', capacidad: 4, estado: 'EN_VIAJE', viajesToday: 9 },
-  { id: 3, conductor: 'Pedro Salinas', placa: 'HBC-5530', modelo: 'Hyundai Accent · Negro', capacidad: 4, estado: 'DISPONIBLE', viajesToday: 3 },
-  { id: 4, conductor: 'Jorge Mina', placa: 'GBP-8821', modelo: 'KIA Picanto · Blanco', capacidad: 3, estado: 'NO_DISPONIBLE', viajesToday: 0 },
-];
+import React, { useState, useEffect } from 'react';
+import { FaTrash, FaCar } from 'react-icons/fa';
 
 const estadoConfig = {
-  DISPONIBLE: { bg: '#D1FAE5', text: '#065F46', label: 'Disponible' },
-  EN_VIAJE: { bg: '#DBEAFE', text: '#1E40AF', label: 'En viaje' },
-  NO_DISPONIBLE: { bg: '#F3F4F6', text: '#6C757D', label: 'No disponible' },
+  DISPONIBLE: { bg: 'rgba(16,185,129,0.15)', text: '#10b981', label: 'Disponible' },
+  EN_VIAJE: { bg: 'rgba(59,130,246,0.15)', text: '#3b82f6', label: 'En viaje' },
+  NO_DISPONIBLE: { bg: 'rgba(156,163,175,0.15)', text: '#9ca3af', label: 'Inactivo' },
 };
 
 export default function GestionFlota() {
-  const [vehiculos, setVehiculos] = useState(flota);
+  const [vehiculos, setVehiculos] = useState([]);
+  const [cargando, setCargando] = useState(true);
 
-  const cambiarEstado = (id, estado) => setVehiculos(prev => prev.map(v => v.id === id ? { ...v, estado } : v));
+  const cargarVehiculos = async () => {
+    try {
+      const res = await fetch('http://localhost:8000/vehiculos/');
+      if (res.ok) {
+        const data = await res.json();
+        setVehiculos(data);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  useEffect(() => {
+    cargarVehiculos();
+  }, []);
+
+  const cambiarEstado = async (id, estado) => {
+    try {
+      const res = await fetch(`http://localhost:8000/vehiculos/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado_vehiculo: estado })
+      });
+      if (res.ok) {
+        cargarVehiculos();
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  const eliminar = async (id) => {
+    if (!window.confirm("¿Eliminar este vehículo permanentemente?")) return;
+    try {
+      const res = await fetch(`http://localhost:8000/vehiculos/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        cargarVehiculos();
+      }
+    } catch (e) { console.error(e); }
+  };
 
   return (
-    <div className="card" style={{ maxWidth: '680px' }}>
-      <h2 className="card-title">Administración de Flota (RF-16)</h2>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
+      <h2 style={{ color: 'white', marginBottom: '0.3rem' }}>Administración de Flota (CRUD)</h2>
+      <p style={{ color: 'var(--gray-400)', fontSize: '0.9rem', marginBottom: '2rem' }}>
+        RF-Admin · Actualiza estados o elimina vehículos de la DB en tiempo real.
+      </p>
 
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
-        {[
-          { label: 'Total', value: vehiculos.length, color: '#1F2937' },
-          { label: 'Disponibles', value: vehiculos.filter(v => v.estado === 'DISPONIBLE').length, color: '#059669' },
-          { label: 'En viaje', value: vehiculos.filter(v => v.estado === 'EN_VIAJE').length, color: '#2563EB' },
-          { label: 'Inactivos', value: vehiculos.filter(v => v.estado === 'NO_DISPONIBLE').length, color: '#9CA3AF' },
-        ].map(s => (
-          <div key={s.label} style={{ flex: 1, textAlign: 'center', padding: '0.65rem', background: '#F9FAFB', borderRadius: '8px', borderBottom: `3px solid ${s.color}` }}>
-            <p style={{ margin: 0, fontSize: '1.3rem', fontWeight: 700, color: s.color }}>{s.value}</p>
-            <p style={{ margin: 0, fontSize: '0.75rem', color: '#6C757D' }}>{s.label}</p>
-          </div>
-        ))}
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-        {vehiculos.map(v => (
-          <div key={v.id} style={{ padding: '0.9rem 1rem', border: '1px solid #E5E7EB', borderRadius: '10px', background: '#FAFAFA' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-              <div>
-                <p style={{ margin: 0, fontWeight: 700 }}>🚕 {v.placa}</p>
-                <p style={{ margin: '0.1rem 0', fontSize: '0.82rem', color: '#6C757D' }}>{v.modelo} · {v.capacidad} asientos</p>
-                <p style={{ margin: 0, fontSize: '0.82rem', color: '#9CA3AF' }}>👤 {v.conductor} · {v.viajesToday} viajes hoy</p>
+      {cargando ? (
+        <p style={{ color: 'white' }}>Cargando flota desde el servidor...</p>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          {vehiculos.map(v => (
+            <div key={v.id_vehiculo} style={{ padding: '1.25rem', border: '1px solid var(--border)', borderRadius: '12px', background: 'var(--gray-900)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <div style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.05)', borderRadius: '10px' }}>
+                    <FaCar style={{ fontSize: '1.5rem', color: 'var(--yellow-400)' }} />
+                  </div>
+                  <div>
+                    <p style={{ margin: 0, fontWeight: 'bold', color: 'white', fontSize: '1.1rem' }}>{v.placa}</p>
+                    <p style={{ margin: '0.2rem 0', fontSize: '0.85rem', color: 'var(--gray-400)' }}>{v.marca} {v.modelo} · {v.color}</p>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--yellow-400)' }}>Capacidad: {v.capacidad_pasajeros} pax</p>
+                  </div>
+                </div>
+                
+                {v.estado_vehiculo && estadoConfig[v.estado_vehiculo] && (
+                  <span style={{ background: estadoConfig[v.estado_vehiculo].bg, color: estadoConfig[v.estado_vehiculo].text, padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                    {estadoConfig[v.estado_vehiculo].label}
+                  </span>
+                )}
               </div>
-              <span style={{ background: estadoConfig[v.estado].bg, color: estadoConfig[v.estado].text, padding: '4px 10px', borderRadius: '12px', fontSize: '0.78rem', fontWeight: 600 }}>
-                {estadoConfig[v.estado].label}
-              </span>
-            </div>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              {Object.keys(estadoConfig).filter(e => e !== v.estado).map(e => (
-                <button key={e} onClick={() => cambiarEstado(v.id, e)} style={{ border: `1px solid ${estadoConfig[e].text}`, borderRadius: '6px', padding: '3px 10px', cursor: 'pointer', fontSize: '0.78rem', background: estadoConfig[e].bg, color: estadoConfig[e].text, fontWeight: 500 }}>
-                  → {estadoConfig[e].label}
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  {Object.keys(estadoConfig).filter(e => e !== v.estado_vehiculo).map(e => (
+                    <button key={e} onClick={() => cambiarEstado(v.id_vehiculo, e)} style={{ border: `1px solid var(--border)`, borderRadius: '8px', padding: '0.4rem 0.8rem', cursor: 'pointer', fontSize: '0.8rem', background: 'rgba(255,255,255,0.05)', color: 'white', transition: 'all 0.2s' }}>
+                      Cambiar a {estadoConfig[e].label}
+                    </button>
+                  ))}
+                </div>
+                <button onClick={() => eliminar(v.id_vehiculo)} style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 'bold' }}>
+                  <FaTrash /> Eliminar
                 </button>
-              ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+          {vehiculos.length === 0 && (
+             <p style={{ textAlign: 'center', color: 'var(--gray-400)', padding: '2rem 0' }}>No hay vehículos registrados.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
