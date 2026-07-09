@@ -386,9 +386,9 @@
   margin-top: 0.2rem;
 }
 
-/* Cuando el panel está abierto el main se reduce */
+/* Cuando el panel está abierto el main no se reduce, simplemente el panel se superpone (Overlay) */
 .dashboard-main.panel-open {
-  margin-right: 300px;
+  /* margin-right: 300px; Eliminado para que no aplaste el contenido */
   transition: margin-right 0.25s ease;
 }
 

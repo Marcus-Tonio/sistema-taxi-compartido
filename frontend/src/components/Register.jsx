@@ -41,6 +41,7 @@ export default function Register({ onClose, onSwitchToLogin }) {
           correo: form.correo,
           telefono: form.telefono,
           contrasena: form.contrasena,
+          rol: role === 'Pasajero' ? 'CLIENTE' : 'CONDUCTOR',
           idioma: 'ES'
         })
       });

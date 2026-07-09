@@ -52,9 +52,33 @@ export default function GestionFlota() {
     } catch (e) { console.error(e); }
   };
 
+  const crearVehiculoPrueba = async () => {
+    const mock = {
+      placa: `G${Math.random().toString(36).substring(2, 4).toUpperCase()}-${Math.floor(Math.random() * 9000) + 1000}`,
+      marca: 'Chevrolet',
+      modelo: 'Aveo',
+      color: 'Blanco',
+      capacidad_pasajeros: 4,
+      id_conductor: 2 // Usaremos el id 2 por defecto para la prueba
+    };
+    try {
+      const res = await fetch('http://localhost:8000/vehiculos/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(mock)
+      });
+      if (res.ok) cargarVehiculos();
+    } catch (e) { console.error(e); }
+  };
+
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
-      <h2 style={{ color: 'white', marginBottom: '0.3rem' }}>Administración de Flota (CRUD)</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.3rem' }}>
+        <h2 style={{ color: 'white', margin: 0 }}>Administración de Flota (CRUD)</h2>
+        <button onClick={crearVehiculoPrueba} style={{ background: 'var(--yellow-400)', color: 'black', border: 'none', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+          + Vehículo de Prueba
+        </button>
+      </div>
       <p style={{ color: 'var(--gray-400)', fontSize: '0.9rem', marginBottom: '2rem' }}>
         RF-Admin · Actualiza estados o elimina vehículos de la DB en tiempo real.
       </p>
