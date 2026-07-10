@@ -70,7 +70,7 @@ export default function SolicitudGeolocalizada() {
     // Intentar guardar en backend
     try {
       const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { id_usuario: 1 };
-      await fetch('http://localhost:8000/viajes/solicitar', {
+      await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/viajes/solicitar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

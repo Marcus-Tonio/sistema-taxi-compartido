@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FaUserAlt, FaEnvelope, FaLock, FaIdCard, FaTimes, FaPhone, FaCheckCircle, FaSpinner } from 'react-icons/fa';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export default function Register({ onClose, onSwitchToLogin }) {
   const [role, setRole] = useState('Pasajero');

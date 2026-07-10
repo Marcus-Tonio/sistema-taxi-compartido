@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch, FaTrash, FaPause, FaPlay } from 'react-icons/fa';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 export default function GestionUsuarios() {
   const [usuarios, setUsuarios] = useState([]);
   const [busqueda, setBusqueda] = useState('');
@@ -8,7 +10,7 @@ export default function GestionUsuarios() {
 
   const cargarUsuarios = async () => {
     try {
-      const res = await fetch('http://localhost:8000/usuarios/');
+      const res = await fetch(`${API_URL}/usuarios/`);
       if (res.ok) {
         const data = await res.json();
         setUsuarios(data);
@@ -32,7 +34,7 @@ export default function GestionUsuarios() {
   const toggleEstado = async (u) => {
     const nuevoEstado = u.estado_cuenta === 'ACTIVO' ? 'SUSPENDIDO' : 'ACTIVO';
     try {
-      const res = await fetch(`http://localhost:8000/usuarios/${u.id_usuario}`, {
+      const res = await fetch(`${API_URL}/usuarios/${u.id_usuario}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ estado_usuario: nuevoEstado })
@@ -47,7 +49,7 @@ export default function GestionUsuarios() {
   const eliminar = async (id) => {
     if (!window.confirm("¿Seguro que deseas eliminar este usuario de la base de datos?")) return;
     try {
-      const res = await fetch(`http://localhost:8000/usuarios/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/usuarios/${id}`, { method: 'DELETE' });
       if (res.ok) {
         alert("Usuario eliminado correctamente.");
         cargarUsuarios();

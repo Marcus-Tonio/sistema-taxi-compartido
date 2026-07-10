@@ -43,7 +43,7 @@ export default function GestionSolicitudes() {
         id_conductor: currentUser.id_usuario || 2
       };
 
-      const response = await fetch('http://localhost:8000/viajes/aceptar', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/viajes/aceptar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

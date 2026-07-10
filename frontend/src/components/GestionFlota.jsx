@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { FaTrash, FaCar } from 'react-icons/fa';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 const estadoConfig = {
   DISPONIBLE: { bg: 'rgba(16,185,129,0.15)', text: '#10b981', label: 'Disponible' },
   EN_VIAJE: { bg: 'rgba(59,130,246,0.15)', text: '#3b82f6', label: 'En viaje' },
@@ -13,7 +15,7 @@ export default function GestionFlota() {
 
   const cargarVehiculos = async () => {
     try {
-      const res = await fetch('http://localhost:8000/vehiculos/');
+      const res = await fetch(`${API_URL}/vehiculos/`);
       if (res.ok) {
         const data = await res.json();
         setVehiculos(data);
@@ -31,7 +33,7 @@ export default function GestionFlota() {
 
   const cambiarEstado = async (id, estado) => {
     try {
-      const res = await fetch(`http://localhost:8000/vehiculos/${id}`, {
+      const res = await fetch(`${API_URL}/vehiculos/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ estado_vehiculo: estado })
@@ -45,7 +47,7 @@ export default function GestionFlota() {
   const eliminar = async (id) => {
     if (!window.confirm("¿Eliminar este vehículo permanentemente?")) return;
     try {
-      const res = await fetch(`http://localhost:8000/vehiculos/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/vehiculos/${id}`, { method: 'DELETE' });
       if (res.ok) {
         cargarVehiculos();
       }
@@ -62,7 +64,7 @@ export default function GestionFlota() {
       id_conductor: 2 // Usaremos el id 2 por defecto para la prueba
     };
     try {
-      const res = await fetch('http://localhost:8000/vehiculos/', {
+      const res = await fetch(`${API_URL}/vehiculos/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(mock)
