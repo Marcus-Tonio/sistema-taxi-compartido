@@ -82,7 +82,7 @@ export default function GestionFlota() {
         </button>
       </div>
       <p style={{ color: 'var(--gray-400)', fontSize: '0.9rem', marginBottom: '2rem' }}>
-        RF-Admin · Actualiza estados o elimina vehículos de la DB en tiempo real.
+        Actualiza estados o elimina vehículos de la DB en tiempo real.
       </p>
 
       {cargando ? (

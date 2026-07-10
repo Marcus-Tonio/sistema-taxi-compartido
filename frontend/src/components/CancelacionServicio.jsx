@@ -41,7 +41,7 @@ export default function CancelacionServicio() {
           <FaTimesCircle style={{ color: '#ef4444', fontSize: '1.5rem' }} />
           <h2 style={{ color: 'white', margin: 0 }}>Cancelar Viaje</h2>
         </div>
-        <p style={{ color: 'var(--gray-400)', fontSize: '0.9rem', marginBottom: '2rem' }}>RF-11 · Puedes cancelar tu solicitud antes de que el conductor inicie el trayecto.</p>
+        <p style={{ color: 'var(--gray-400)', fontSize: '0.9rem', marginBottom: '2rem' }}>Puedes cancelar tu solicitud antes de que el conductor inicie el trayecto.</p>
 
         {/* Viaje activo */}
         <div style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '14px', padding: '1.25rem', marginBottom: '2rem' }}>

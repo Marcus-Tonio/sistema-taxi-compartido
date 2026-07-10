@@ -25,7 +25,7 @@ export default function GestionLocalidades() {
   return (
     <div className="card" style={{ maxWidth: '580px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.4rem', fontWeight: 700, margin: 0 }}>Localidades (RF-17)</h2>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 700, margin: 0 }}>Localidades</h2>
         <button className="btn btn-primary" style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem' }} onClick={() => setModo(modo === 'lista' ? 'nuevo' : 'lista')}>
           {modo === 'lista' ? '+ Nueva' : '← Volver'}
         </button>

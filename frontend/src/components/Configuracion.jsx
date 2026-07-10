@@ -37,7 +37,7 @@ const configItems = [
 export default function Configuracion() {
   return (
     <div className="card" style={{ maxWidth: '620px' }}>
-      <h2 className="card-title">Configuración del Sistema (RF-20)</h2>
+      <h2 className="card-title">Configuración del Sistema</h2>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
         {configItems.map(grupo => (

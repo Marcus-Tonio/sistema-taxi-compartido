@@ -13,7 +13,7 @@ export default function ControlCapacidad() {
 
   return (
     <div className="card">
-      <h2 className="card-title">Control de Capacidad (RF-12)</h2>
+      <h2 className="card-title">Control de Capacidad</h2>
 
       {/* Barra de capacidad */}
       <div style={{ marginBottom: '1.5rem' }}>

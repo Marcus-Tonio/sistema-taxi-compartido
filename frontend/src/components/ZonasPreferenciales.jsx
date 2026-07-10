@@ -31,7 +31,7 @@ export default function ZonasPreferenciales() {
         <div className="floating-panel-header">
           <h2>Zonas Preferenciales</h2>
           <p style={{ color: 'var(--gray-400)', fontSize: '0.82rem', marginTop: '0.3rem', marginBottom: 0 }}>
-            RF-15 · Define hasta 3 zonas donde quieres operar.
+            Define hasta 3 zonas donde quieres operar.
           </p>
         </div>
 

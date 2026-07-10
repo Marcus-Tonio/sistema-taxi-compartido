@@ -39,7 +39,7 @@ export default function ReporteIncidente() {
           <div style={{ background: 'rgba(245, 158, 11, 0.1)', padding: '0.5rem', borderRadius: '10px' }}>
             <FaExclamationTriangle style={{ color: 'var(--yellow-400)', fontSize: '1.2rem' }} />
           </div>
-          <h2 style={{ color: 'white', margin: 0 }}>Reportar un Problema (RF-19)</h2>
+          <h2 style={{ color: 'white', margin: 0 }}>Reportar un Problema</h2>
         </div>
         <p style={{ color: 'var(--gray-400)', marginBottom: '2rem', fontSize: '0.9rem' }}>
           Describe detalladamente el incidente. Si es una emergencia, usa el botón S.O.S.

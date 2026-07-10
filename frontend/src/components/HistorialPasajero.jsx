@@ -17,7 +17,7 @@ export default function HistorialPasajero() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
           <div>
             <h2 style={{ color: 'white', marginBottom: '0.2rem' }}>Historial de Actividad</h2>
-            <p style={{ color: 'var(--gray-400)', fontSize: '0.9rem' }}>RF-16 · Todos tus viajes pasados.</p>
+            <p style={{ color: 'var(--gray-400)', fontSize: '0.9rem' }}>Todos tus viajes pasados.</p>
           </div>
           <button style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid var(--border)', color: 'var(--gray-300)', padding: '0.6rem 1rem', borderRadius: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
             <FaDownload /> Exportar CSV

@@ -3,7 +3,7 @@ import React from 'react';
 export default function CalculoRuta() {
   return (
     <div className="card">
-      <h2 className="card-title">Cálculo de Ruta y Costo (RF-5)</h2>
+      <h2 className="card-title">Cálculo de Ruta y Costo</h2>
       
       <div className="form-group">
         <label className="form-label">Origen</label>

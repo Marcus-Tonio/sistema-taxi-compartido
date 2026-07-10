@@ -29,7 +29,7 @@ export default function GestionIncidentes() {
 
   return (
     <div className="card" style={{ maxWidth: '650px' }}>
-      <h2 className="card-title">Monitor de Incidentes (RF-18)</h2>
+      <h2 className="card-title">Monitor de Incidentes</h2>
 
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
         {['todos', 'ABIERTO', 'EN_ATENCION', 'RESUELTO'].map(f => (

@@ -15,7 +15,7 @@ const totalIngresos = historial
 export default function HistorialConductor() {
   return (
     <div className="card" style={{ maxWidth: '620px' }}>
-      <h2 className="card-title">Historial de Viajes (RF-14)</h2>
+      <h2 className="card-title">Historial de Viajes</h2>
 
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
         {[

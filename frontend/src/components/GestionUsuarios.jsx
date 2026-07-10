@@ -63,7 +63,7 @@ export default function GestionUsuarios() {
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
       <h2 style={{ color: 'white', marginBottom: '0.3rem' }}>Gestión de Usuarios (CRUD)</h2>
       <p style={{ color: 'var(--gray-400)', fontSize: '0.9rem', marginBottom: '2rem' }}>
-        RF-Admin · Leer, Actualizar y Eliminar usuarios reales de la Base de Datos.
+        Leer, Actualizar y Eliminar usuarios reales de la Base de Datos.
       </p>
 
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>

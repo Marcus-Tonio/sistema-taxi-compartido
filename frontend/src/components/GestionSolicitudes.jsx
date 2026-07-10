@@ -72,7 +72,7 @@ export default function GestionSolicitudes() {
     <div style={{ padding: '2rem', maxWidth: '700px', margin: '0 auto' }}>
       <h2 style={{ color: 'white', marginBottom: '0.3rem' }}>Gestión de Solicitudes</h2>
       <p style={{ color: 'var(--gray-400)', fontSize: '0.9rem', marginBottom: '2rem' }}>
-        RF-8 · Revisa y responde a las solicitudes entrantes antes de que expiren.
+        Revisa y responde a las solicitudes entrantes antes de que expiren.
       </p>
 
       {/* Solicitudes Pendientes */}

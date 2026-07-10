@@ -29,7 +29,7 @@ export default function SeguimientoTiempoReal() {
             Seguimiento en Vivo
           </h2>
           <p style={{ color: 'var(--gray-400)', fontSize: '0.82rem', marginTop: '0.3rem', marginBottom: 0 }}>
-            RF-12 · Posición actualizada cada 5 segundos.
+            Posición actualizada cada 5 segundos.
           </p>
         </div>
 

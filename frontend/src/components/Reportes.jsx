@@ -27,7 +27,7 @@ export default function Reportes() {
 
   return (
     <div className="card" style={{ maxWidth: '660px' }}>
-      <h2 className="card-title">Reportes y Consultas (RF-19)</h2>
+      <h2 className="card-title">Reportes y Consultas</h2>
 
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
         {[['hoy', 'Hoy'], ['semana', 'Esta semana'], ['mes', 'Este mes']].map(([k, l]) => (

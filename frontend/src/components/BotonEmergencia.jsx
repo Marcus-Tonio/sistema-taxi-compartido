@@ -38,7 +38,7 @@ export default function BotonEmergencia() {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '2rem' }}>
       <div style={{ background: 'var(--gray-900)', borderRadius: '24px', padding: '3rem', textAlign: 'center', maxWidth: '450px', width: '100%', border: '1px solid var(--border)' }}>
         
-        <h2 style={{ color: 'white', marginBottom: '0.5rem' }}>Botón de Pánico (RF-20)</h2>
+        <h2 style={{ color: 'white', marginBottom: '0.5rem' }}>Botón de Pánico</h2>
         <p style={{ color: 'var(--gray-400)', marginBottom: '3rem' }}>
           Úsalo solo en situaciones de peligro real. Alertará a las autoridades inmediatamente.
         </p>
