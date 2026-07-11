@@ -43,24 +43,17 @@ export default function GestionSolicitudes() {
         id_conductor: currentUser.id_usuario || 2
       };
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/viajes/aceptar`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (response.ok) {
+      // Para la demostración del video, simulamos que el backend responde exitosamente
+      // ya que las solicitudes mostradas son datos estáticos de prueba (mock)
+      setTimeout(() => {
         const sol = solicitudes.find(s => s.id === id);
         setAceptadas(prev => [sol, ...prev]);
         setSolicitudes(prev => prev.filter(s => s.id !== id));
-        alert("¡Transacción Exitosa! Viaje aceptado en la base de datos.");
-      } else {
-        const err = await response.json();
-        alert(`Error: ${err.detail}`);
-      }
+        alert("¡Transacción Exitosa! Viaje aceptado (Simulación para demo).");
+      }, 500);
     } catch (error) {
       console.error(error);
-      alert("Error de conexión al aceptar viaje.");
+      alert("Error al procesar la solicitud.");
     }
   };
 
